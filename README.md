@@ -1,2 +1,58 @@
 # Wether-like-music-
 According to wether Play music 
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Music</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(to bottom, #87cefa, #f0f8ff);
+      text-align: center;
+    }
+    h1 { color: #333; }
+    iframe {
+      margin-top: 20px;
+      width: 80%;
+      height: 315px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>🌤️ Weather Based Music 🎶</h1>
+  <p id="weather">Loading weather...</p>
+  <iframe id="player" allow="autoplay"></iframe>  <script>
+    const apiKey = "02aa34884943d82be30922510cecee37"; // Your OpenWeather API Key
+    const lat = 26.85; // Lucknow latitude
+    const lon = 80.9167; // Lucknow longitude
+
+    const playlistMap = {
+      Clear: "https://www.youtube.com/embed/uy9CS0ZIV5I", // Sunny → Apna Dil Awara (Sanam)
+      Clouds: "https://www.youtube.com/embed/Js8d8xRUXoI", // Cloudy → Tere Sang Yara (Atif Aslam)
+      Rain: "https://www.youtube.com/embed/dzOQ9nB0EtQ"  // Rainy → Halki Halki Si Barsaat (Saaj Bhatt)
+    };
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+      .then(res => res.json())
+      .then(data => {
+        const condition = data.weather[0].main;
+        document.getElementById("weather").innerText = `Today's Weather in Lucknow: ${condition}`;
+
+        let videoUrl = playlistMap[condition] || playlistMap["Clear"];
+        document.getElementById("player").src = videoUrl + "?autoplay=1";
+      })
+      .catch(() => {
+        document.getElementById("weather").innerText = "Unable to fetch weather.";
+      });
+  </script></body>
+</html>
